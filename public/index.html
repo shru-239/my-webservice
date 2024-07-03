@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Form</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .error {
+      color: red;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <h1>User Form</h1>
+  <form id="userForm">
+    <div class="form-group">
+      <label for="firstName">First Name:</label><br>
+      <input type="text" id="firstName" name="firstName">
+      <div id="firstNameError" class="error"></div>
+    </div>
+    <div class="form-group">
+      <label for="lastName">Last Name:</label><br>
+      <input type="text" id="lastName" name="lastName">
+      <div id="lastNameError" class="error"></div>
+    </div>
+    <div class="form-group">
+      <label for="mobileNo">Mobile No:</label><br>
+      <input type="text" id="mobileNo" name="mobileNo">
+      <div id="mobileNoError" class="error"></div>
+    </div>
+    <div class="form-group">
+      <label for="email">Email:</label><br>
+      <input type="text" id="email" name="email">
+      <div id="emailError" class="error"></div>
+    </div>
+    <div class="form-group">
+      <fieldset>
+        <legend>Address</legend>
+        <label for="street">Street:</label><br>
+        <input type="text" id="street" name="street">
+        <div id="streetError" class="error"></div>
+        <br>
+        <label for="city">City:</label><br>
+        <input type="text" id="city" name="city">
+        <div id="cityError" class="error"></div>
+        <br>
+        <label for="state">State:</label><br>
+        <input type="text" id="state" name="state">
+        <div id="stateError" class="error"></div>
+        <br>
+        <label for="country">Country:</label><br>
+        <input type="text" id="country" name="country">
+        <div id="countryError" class="error"></div>
+      </fieldset>
+    </div>
+    <div class="form-group">
+      <label for="loginId">Login ID:</label><br>
+      <input type="text" id="loginId" name="loginId">
+      <div id="loginIdError" class="error"></div>
+    </div>
+    <div class="form-group">
+      <label for="password">Password:</label><br>
+      <input type="password" id="password" name="password">
+      <div id="passwordError" class="error"></div>
+    </div>
+    <button type="submit">Submit</button>
+  </form>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
