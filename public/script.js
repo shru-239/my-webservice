@@ -57,33 +57,33 @@ $(document).ready(function() {
       $('#countryError').text('Country is required.');
       hasError = true;
     }
-    if (!user.loginId.match(/^[a-zA-Z0-9]{8}$/)) {
-      $('#loginIdError').text('Login ID must be 8 alphanumeric characters.');
+    if (!user.loginId) {
+      $('#loginIdError').text('Login ID is required.');
       hasError = true;
     }
-    if (!user.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{6,}$/)) {
-      $('#passwordError').text('Password must be at least 6 characters, include 1 uppercase letter, 1 lowercase letter, and 1 special character.');
+    if (!user.password) {
+      $('#passwordError').text('Password is required.');
       hasError = true;
     }
 
-    if (!hasError) {
-      $.ajax({
-        url: '/users',
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(user),
-        success: function(response) {
-          console.log('User saved successfully:', response);
-          alert('User saved successfully!');
-          socket.emit('joinRoom', { email: user.email, name: `${user.firstName} ${user.lastName}` });
-          // socket.emit('joinRoom', { email: user.email, name: user.firstName + ' ' + user.lastName });
-          $('#userForm')[0].reset(); // Reset form after successful submission
-        },
-        error: function(error) {
-          console.error('Error saving user:', error);
-          alert('Error saving user: ' + error.responseText);
-        }
-      });
+    if (hasError) {
+      return;
     }
+
+    // Submit form data to the server
+    $.ajax({
+      url: '/users',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(user),
+      success: function(response) {
+        // Redirect to user list page upon successful registration
+        window.location.href = '/user-list.html';
+      },
+      error: function(xhr, status, error) {
+        const errorMessage = xhr.responseText || 'An error occurred. Please try again.';
+        alert(errorMessage);
+      }
+    });
   });
 });
