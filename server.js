@@ -28,20 +28,19 @@ app.use('/users', userRoutes);
 io.on('connection', (socket) => {
   console.log(`A user connected: ${socket.id}`);
 
-  socket.on('joinRoom', (userData) => {
+  socket.on('joinRoom', async (userData) => {
+    // Join the user to the "Live-users" room
+    socket.join('Live-users');
+
+    // Store user details in local variable
     usersInRoom[socket.id] = {
       email: userData.email,
-      name: userData.name,
+      name: `${userData.firstName} ${userData.lastName}`,
       socketId: socket.id
     };
 
-    console.log('User joining room:', userData);
-    console.log('Users in room:', usersInRoom);
-
-    socket.join('Live-users');
-
     // Emit updated user list to all clients in the room
-    io.to('Live-users').emit('updateUserList', usersInRoom);
+    io.to('Live-users').emit('updateUserList', Object.values(usersInRoom));
   });
 
   socket.on('disconnect', () => {
@@ -49,9 +48,11 @@ io.on('connection', (socket) => {
     delete usersInRoom[socket.id];
 
     // Emit updated user list to all clients in the room
-    io.to('Live-users').emit('updateUserList', usersInRoom);
+    io.to('Live-users').emit('updateUserList', Object.values(usersInRoom));
   });
+
 });
+
 
 server.listen(3001, () => {
   console.log('Server running at http://localhost:3001/');

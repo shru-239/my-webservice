@@ -47,6 +47,7 @@ $(document).ready(function() {
           Address: ${user.address.street}, ${user.address.city}, ${user.address.state}, ${user.address.country}
           Login ID: ${user.loginId}
         `);
+        console.log(user);
       },
       error: function(error) {
         console.error('Error fetching user details:', error);
