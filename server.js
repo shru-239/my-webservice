@@ -51,7 +51,7 @@
 // server.listen(PORT, () => {
 //   console.log(`Server running at http://localhost:${PORT}/`);
 // });
-
+require('dotenv').config();
 const express = require('express');
 const app = express(); // Initialize app before using it
 const mongoose = require('mongoose');
@@ -66,7 +66,7 @@ const liveUsers = {};
 const port = 3000; 
 
 // Connect to MongoDB (replace with your actual credentials)
-mongoose.connect('mongodb://localhost:27017/webserviceDb', { 
+mongoose.connect(process.env.MONGODB_URI ||'mongodb://localhost:27017/webserviceDb', { 
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
