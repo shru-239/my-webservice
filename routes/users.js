@@ -1,41 +1,53 @@
 const express = require('express');
-const User = require('../models/user');
 const router = express.Router();
+const User = require('../models/user'); 
 
-// POST to create a new user
-router.post('/', async (req, res) => {
-  try {
-    const user = new User(req.body);
-    user.creationTime = new Date();
-    user.lastUpdatedOn = new Date();
-    await user.save();
-    res.status(201).send(user);
-  } catch (error) {
-    res.status(400).send(error.message);
-  }
-});
-
-// GET to retrieve user info by email
-router.get('/:email', async (req, res) => {
-  try {
-    const user = await User.findOne({ email: req.params.email });
-    if (!user) {
-      return res.status(404).send('User not found');
+// Create a new user (POST /api/users)
+router.post('/users', async (req, res) => {
+    try {
+        const user = new User(req.body);
+        await user.save();
+        res.status(201).json(user); // 201 Created
+    } catch (err) {
+        if (err.name === 'ValidationError') {
+            res.status(400).json({ error: err.message }); // 400 Bad Request
+        } else {
+            res.status(500).json({ error: 'Server error' }); // 500 Internal Server Error
+        }
     }
-    res.send(user);
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
 });
 
-// GET to retrieve all users
-router.get('/', async (req, res) => {
-  try {
-    const users = await User.find();
-    res.send(users);
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
+// Get all users (GET /api/users)
+router.get('/users', async (req, res) => {
+    try {
+        const users = await User.find();
+        res.json(users);
+    } catch (err) {
+        res.status(500).json({ error: 'Server error' });
+    }
 });
 
-module.exports = router;
+// Get user by email ID or socket ID (GET /api/users/:identifier)
+router.get('/users/:identifier', async (req, res) => {
+    try {
+        const identifier = req.params.identifier;
+
+        const user = await User.findOne({
+            $or: [
+                { emailId: identifier },
+                { socketId: identifier } 
+            ]
+        });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const { password, ...userDataWithoutPassword } = user.toObject();
+        res.json(userDataWithoutPassword);
+    } catch (err) {
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+module.exports = router; // Export the router

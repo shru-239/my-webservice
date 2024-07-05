@@ -1,74 +1,73 @@
-$(document).ready(function() {
-  const socket = io();
 
-  // Function to fetch and display user list
-  function fetchUserList() {
-    $.ajax({
-      url: '/users',
-      type: 'GET',
-      success: function(users) {
-        console.log('Received user list:', users);
+// $(document).ready(function() {
+//   const socket = io();
 
-        const tbody = $('#userTable tbody');
-        tbody.empty();
+//   // Function to fetch and display users
+//   function fetchAndDisplayUsers() {
+//       $.ajax({
+//           url: '/api/users',
+//           type: 'GET',
+//           success: function(users) {
+//               const userDisplay = $('#userDisplay');
+//               userDisplay.empty(); // Clear previous results
 
-        users.forEach(function(user) {
-          const row = `<tr>
-            <td>${user.email}</td>
-            <td>${user.firstName} ${user.lastName}</td>
-            <td><button class="showDetailsBtn" data-email="${user.email}">Show Details</button></td>
-          </tr>`;
-          tbody.append(row);
-        });
-      },
-      error: function(error) {
-        console.error('Error fetching user list:', error);
-        alert('Error fetching user list. Please try again.');
-      }
-    });
-  }
+//               // Create the table structure
+//               const table = $('<table>').addClass("table table-striped table-bordered");
+//               const headerRow = $('<tr>');
+//               headerRow.append($('<th>').text('Name'));
+//               headerRow.append($('<th>').text('Email'));
+//               headerRow.append($('<th>').text('Socket ID')); // Add Socket ID column
+//               table.append(headerRow);
 
-  // Initial fetch of user list when the page loads
-  fetchUserList();
+//               users.forEach(user => {
+//                   const row = $('<tr>');
+//                   const nameCell = $('<td>').text(`${user.firstName} ${user.lastName}`);
+//                   const emailCell = $('<td>').text(user.emailId);
+//                   const socketIdCell = $('<td>').text(user.socketId); // Add Socket ID cell
 
-  // Event listener for showing user details
-  $(document).on('click', '.showDetailsBtn', function() {
-    const email = $(this).data('email');
-    console.log('Fetching details for email:', email);
+//                   // Click event to fetch user details
+//                   emailCell.on('click', () => {
+//                       $.ajax({
+//                           url: `/api/users/${user.emailId}`,
+//                           type: 'GET',
+//                           success: function(userData) {
+//                               showUserPopup(userData);
+//                           },
+//                           error: function(error) {
+//                               console.error('Error fetching user details:', error);
+//                               alert("Error fetching user details");
+//                           }
+//                       });
+//                   });
 
-    $.ajax({
-      url: `/users/${email}`,
-      type: 'GET',
-      success: function(user) {
-        alert(`
-          First Name: ${user.firstName}
-          Last Name: ${user.lastName}
-          Mobile No: ${user.mobileNo}
-          Address: ${user.address.street}, ${user.address.city}, ${user.address.state}, ${user.address.country}
-          Login ID: ${user.loginId}
-        `);
-        console.log(user);
-      },
-      error: function(error) {
-        console.error('Error fetching user details:', error);
-        alert('Error fetching user details. Please try again.');
-      }
-    });
-  });
+//                   row.append(nameCell, emailCell, socketIdCell); // Append cells to the row
+//                   table.append(row); // Append row to the table
+//               });
 
-  // Socket.io event listener for updating user list
-  socket.on('updateUserList', function(users) {
-    console.log('Received updated user list:', users);
-    const tbody = $('#userTable tbody');
-    tbody.empty();
+//               userDisplay.append(table); // Append the table to the userDisplay div
+//           },
+//           error: function(error) {
+//               console.error('Error fetching users:', error);
+//               alert("Error fetching users");
+//           }
+//       });
+//   }
 
-    users.forEach(function(user) {
-      const row = `<tr>
-        <td>${user.email}</td>
-        <td>${user.name}</td>
-        <td><button class="showDetailsBtn" data-email="${user.email}">Show Details</button></td>
-      </tr>`;
-      tbody.append(row);
-    });
-  });
-});
+//   // Function to display user details in a popup
+//   function showUserPopup(userData) {
+//       const modal = $('#userPopup');
+//       const details = $('#userDetails');
+//       details.text(JSON.stringify(userData, (key, value) => key === 'password' ? undefined : value, 2));
+//       modal.show();
+//   }
+
+//   // Close the popup when the user clicks the close button
+//   $('.close').on('click', function() {
+//       $('#userPopup').hide();
+//   });
+
+//   // Initial fetch of users
+//   fetchAndDisplayUsers();
+  
+// });
+
