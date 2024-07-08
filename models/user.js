@@ -3,11 +3,23 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
   firstName: {
     type: String,
-    required: true
+    required: true,
+    validate: {
+      validator: function(v) {
+        return /^[a-zA-Z]+$/.test(v);
+      },
+      message: 'First name must contain only letters'
+    }
   },
   lastName: {
     type: String,
-    required: true
+    required: true,
+    validate: {
+      validator: function(v) {
+        return /^[a-zA-Z]+$/.test(v);
+      },
+      message: 'Last name must contain only letters'
+    }
   },
   mobileNo: {
     type: String,
@@ -30,10 +42,54 @@ const userSchema = new mongoose.Schema({
     }
   },
   address: {
-    street: String,
-    city: String,
-    state: String,
-    country: String
+    street: {
+      type: String,
+      required: true,
+      minlength: 4, // Adjusted minimum length to 4
+      maxlength: 100,
+      validate: {
+        validator: function(v) {
+          return /^[a-zA-Z\s]+$/.test(v);
+        },
+        message: 'Street must contain only alphabets and spaces'
+      }
+    },
+    city: {
+      type: String,
+      required: true,
+      minlength: 2,
+      maxlength: 50,
+      validate: {
+        validator: function(v) {
+          return /^[a-zA-Z\s]+$/.test(v);
+        },
+        message: 'City must contain only alphabets and spaces'
+      }
+    },
+    state: {
+      type: String,
+      required: true,
+      minlength: 2,
+      maxlength: 50,
+      validate: {
+        validator: function(v) {
+          return /^[a-zA-Z\s]+$/.test(v);
+        },
+        message: 'State must contain only alphabets and spaces'
+      }
+    },
+    country: {
+      type: String,
+      required: true,
+      minlength: 2,
+      maxlength: 50,
+      validate: {
+        validator: function(v) {
+          return /^[a-zA-Z\s]+$/.test(v);
+        },
+        message: 'Country must contain only alphabets and spaces'
+      }
+    }
   },
   loginId: {
     type: String,
@@ -53,6 +109,7 @@ const userSchema = new mongoose.Schema({
       message: 'Password must have 1 uppercase, 1 lowercase, and 1 special character'
     }
   },
+  
   creationTime: { 
     type: Date, 
     default: Date.now 

@@ -1,25 +1,65 @@
 $(document).ready(function() {
-  const socket = io();
-
-  // Form submission
-  $('#userForm').submit(function(event) {
+    const socket = io();
+  
+    // Form submission
+    $('#userForm').submit(function(event) {
       event.preventDefault();
-
+  
+      // Client-side validation
+      const firstName = $('#firstName').val().trim();
+      const lastName = $('#lastName').val().trim();
+      const mobileNo = $('#mobileNo').val().trim();
+      const emailId = $('#emailId').val().trim();
+      const street = $('#street').val().trim();
+      const city = $('#city').val().trim();
+      const state = $('#state').val().trim();
+      const country = $('#country').val().trim();
+      const loginId = $('#loginId').val().trim();
+      const password = $('#password').val().trim();
+  
+      if (!/^[a-zA-Z]+$/.test(firstName)) {
+        alert('First name must contain only letters');
+        return;
+      }
+      if (!/^[a-zA-Z]+$/.test(lastName)) {
+        alert('Last name must contain only letters');
+        return;
+      }
+      if (!/^\d{10}$/.test(mobileNo)) {
+        alert('Mobile number must be 10 digits');
+        return;
+      }
+      if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(emailId)) {
+        alert('Please enter a valid email address');
+        return;
+      }
+      if (!street || !city || !state || !country) {
+        alert('Address fields must not be empty');
+        return;
+      }
+      if (loginId.length !== 8 || !/^[a-zA-Z0-9]+$/.test(loginId)) {
+        alert('Login ID must be 8 characters long and contain only letters and numbers');
+        return;
+      }
+      if (password.length < 6 || !/^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])/.test(password)) {
+        alert('Password must have 1 uppercase, 1 lowercase, and 1 special character');
+        return;
+      }
+  
       const formData = {
-          firstName: $('#firstName').val(),
-          lastName: $('#lastName').val(),
-          mobileNo: $('#mobileNo').val(),
-          emailId: $('#emailId').val(),
-          address: {
-              street: $('#street').val(),
-              city: $('#city').val(),
-              state: $('#state').val(),
-              country: $('#country').val()
-          },
-          loginId: $('#loginId').val(),
-          password: $('#password').val()
+        firstName: firstName,
+        lastName: lastName,
+        mobileNo: mobileNo,
+        emailId: emailId,
+        address: {
+          street: street,
+          city: city,
+          state: state,
+          country: country
+        },
+        loginId: loginId,
+        password: password
       };
-
       $.ajax({
           url: '/api/users',
           type: 'POST',
@@ -34,7 +74,8 @@ $(document).ready(function() {
             },
             error: function(error) {
                 console.error('Error creating user:', error);
-                alert("Error creating user")
+                alert("Error creating user : " + error.responseJSON.error);
+                console.log("Details: ", error.responseJSON.details);
             }
         });
     });
